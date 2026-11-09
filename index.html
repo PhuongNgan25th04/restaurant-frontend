@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu Khách Hàng - Client App</title>
+  <title>Client App - Menu Khách Hàng</title>
   <style>
     :root {
-      --primary: #ff4757;
-      --bg-color: #f8f9fa;
+      --primary-orange: #ff763b;
+      --bg-color: #f5f6fa;
       --text-main: #2f3542;
       --text-sub: #747d8c;
       --card-bg: #ffffff;
-      --border-color: #e3e6ea;
     }
 
     * {
@@ -24,269 +23,539 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding-bottom: 75px;
     }
 
-    /* Top Navigation */
+    /* Container di động chuẩn 480px */
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #ffffff;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 70px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    /* Các screen */
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    /* Header */
     header {
+      padding: 16px 16px 10px 16px;
       background: var(--card-bg);
-      padding: 16px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-bottom: 1px solid #f1f2f6;
     }
 
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .table-number {
+      font-size: 18px;
+      font-weight: 800;
       margin-bottom: 10px;
-    }
-
-    .header-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .table-info {
-      font-size: 13px;
-      background: #ffeaa7;
-      color: #d63031;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 600;
     }
 
     .search-box {
       width: 100%;
       padding: 10px 14px;
       background: #f1f2f6;
-      border: 1px solid transparent;
+      border: none;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
     }
 
-    /* Horizontal Category Slider */
+    /* Categories Slider */
     .categories {
       display: flex;
       gap: 8px;
       padding: 12px 16px;
       overflow-x: auto;
       background: var(--card-bg);
-      border-bottom: 1px solid var(--border-color);
     }
 
     .category-chip {
-      padding: 8px 16px;
+      padding: 6px 14px;
       background: #f1f2f6;
-      border-radius: 20px;
-      font-size: 13px;
+      border-radius: 16px;
+      font-size: 12px;
       font-weight: 600;
-      white-space: nowrap;
       color: var(--text-sub);
       border: none;
+      white-space: nowrap;
       cursor: pointer;
     }
 
     .category-chip.active {
-      background: var(--primary);
+      background: var(--primary-orange);
       color: white;
     }
 
-    /* Food Grid (Mobile 1 column -> Tablet 2 -> Desktop 4) */
+    /* Food Grid */
     .menu-container {
       padding: 16px;
     }
 
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
     .food-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
-    @media (min-width: 600px) {
-      .food-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (min-width: 1024px) {
-      .food-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-
-    /* Food Card Component */
     .food-card {
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border: 1px solid #f1f2f6;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
 
     .food-img {
       width: 100%;
-      height: 160px;
+      height: 110px;
       object-fit: cover;
     }
 
     .food-info {
-      padding: 12px;
+      padding: 10px 8px;
+      text-align: center;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
     }
 
     .food-name {
-      font-size: 15px;
+      font-size: 12px;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
-    .food-desc {
-      font-size: 12px;
-      color: var(--text-sub);
-      margin-bottom: 8px;
-      line-height: 1.4;
-    }
-
-    .food-footer {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
     .food-price {
-      font-size: 15px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--primary-orange);
+      margin-bottom: 8px;
     }
 
-    .add-btn {
-      background: var(--primary);
+    .add-btn-full {
+      width: 100%;
+      background: var(--primary-orange);
       color: white;
+      border: none;
+      padding: 6px 0;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: auto;
+    }
+
+    /* Màn hình 2: Chi tiết món */
+    .detail-header {
+      position: relative;
+    }
+    .detail-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .back-btn {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255,255,255,0.8);
       border: none;
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
+    }
+    .detail-body {
+      padding: 16px;
+    }
+    .detail-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .detail-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-orange);
+      margin: 6px 0;
+    }
+    .detail-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .option-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .note-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #dfe4ea;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-top: 10px;
+      outline: none;
+    }
+    .detail-footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f1f2f6;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+    .qty-btn {
+      border: none;
+      background: none;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Màn hình 3: Giỏ hàng */
+    .cart-header {
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-bottom: 1px solid #f1f2f6;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f2f6;
+      gap: 12px;
+    }
+    .cart-item-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .cart-item-info {
+      flex-grow: 1;
+    }
+    .cart-item-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .cart-item-price {
+      font-size: 12px;
+      color: var(--primary-orange);
+      font-weight: 700;
+    }
+    .summary-box {
+      padding: 16px;
+      background: #fafafa;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .total-row {
+      font-weight: 700;
+      font-size: 15px;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+    .pay-btn {
+      width: 100%;
+      background: var(--primary-orange);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    /* Màn hình 4: Theo dõi đơn */
+    .status-box {
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .status-steps {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      position: relative;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: #a4b0be;
+    }
+    .step.active {
+      color: var(--primary-orange);
+      font-weight: 700;
+    }
+    .step-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f1f2f6;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 4px;
+    }
+    .step.active .step-icon {
+      background: var(--primary-orange);
+      color: white;
     }
 
-    /* Bottom Navigation Bar */
+    /* Bottom Nav Bar */
     .bottom-nav {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
       height: 60px;
       background: var(--card-bg);
       display: flex;
       justify-content: space-around;
       align-items: center;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      border-top: 1px solid #f1f2f6;
       z-index: 100;
     }
-
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 3px;
-      font-size: 11px;
+      font-size: 10px;
       color: #a4b0be;
       text-decoration: none;
+      cursor: pointer;
     }
-
     .nav-item.active {
-      color: var(--primary);
+      color: var(--primary-orange);
       font-weight: 700;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header -->
-  <header>
-    <div class="header-top">
-      <h1 class="header-title">Nhà Hàng Việt</h1>
-      <span class="table-info">Bàn 05</span>
-    </div>
-    <input type="text" class="search-box" placeholder="Tìm kiếm món ăn, đồ uống...">
-  </header>
+  <div class="app-container">
 
-  <!-- Categories -->
-  <div class="categories">
-    <button class="category-chip active">Tất cả</button>
-    <button class="category-chip">Bánh xèo / Món cuốn</button>
-    <button class="category-chip">Món chính</button>
-    <button class="category-chip">Trà tắc / Đồ uống</button>
-    <button class="category-chip">Tráng miệng</button>
-  </div>
+    <!-- MÀN HÌNH 1: Trang chủ Menu -->
+    <div id="screen-menu" class="screen active">
+      <header>
+        <div class="table-number">Bàn 05</div>
+        <input type="text" class="search-box" placeholder="🔍 Tìm món ăn...">
+      </header>
 
-  <!-- Menu Grid -->
-  <div class="menu-container">
-    <h2 class="section-title">Món nổi bật</h2>
-    
-    <div class="food-grid">
-      <!-- Item 1 (Bánh xèo) -->
-      <div class="food-card">
-        <img class="food-img" src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500" alt="Bánh xèo">
-        <div class="food-info">
-          <h3 class="food-name">Bánh xèo tôm thịt</h3>
-          <p class="food-desc">Bánh xèo giòn rụm nhân tôm thịt tươi ngon, ăn kèm rau sống và nước mắm chua ngọt.</p>
-          <div class="food-footer">
-            <span class="food-price">60.000đ</span>
-            <button class="add-btn">+</button>
+      <div class="categories">
+        <button class="category-chip active">Tất cả</button>
+        <button class="category-chip">Món chính</button>
+        <button class="category-chip">Ăn kèm</button>
+        <button class="category-chip">Đồ uống</button>
+      </div>
+
+      <div class="menu-container">
+        <div class="food-grid">
+          <div class="food-card" onclick="showScreen('screen-detail')">
+            <img class="food-img" src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=400&q=80" alt="Bánh xèo">
+            <div class="food-info">
+              <h3 class="food-name">Bánh xèo tôm thịt</h3>
+              <span class="food-price">60.000đ</span>
+              <button class="add-btn-full">Thêm vào giỏ</button>
+            </div>
+          </div>
+
+          <div class="food-card">
+            <img class="food-img" src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=400&q=80" alt="Bánh xèo hải sản">
+            <div class="food-info">
+              <h3 class="food-name">Bánh xèo hải sản</h3>
+              <span class="food-price">90.000đ</span>
+              <button class="add-btn-full">Thêm vào giỏ</button>
+            </div>
+          </div>
+
+          <div class="food-card">
+            <img class="food-img" src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80" alt="Bánh khọt tôm thịt">
+            <div class="food-info">
+              <h3 class="food-name">Bánh khọt tôm thịt</h3>
+              <span class="food-price">50.000đ</span>
+              <button class="add-btn-full">Thêm vào giỏ</button>
+            </div>
+          </div>
+
+          <div class="food-card">
+            <img class="food-img" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80" alt="Bánh khọt hải sản">
+            <div class="food-info">
+              <h3 class="food-name">Bánh khọt hải sản</h3>
+              <span class="food-price">80.000đ</span>
+              <button class="add-btn-full">Thêm vào giỏ</button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Item 2 (Trà tắc) -->
-      <div class="food-card">
-        <img class="food-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="Trà tắc">
-        <div class="food-info">
-          <h3 class="food-name">Trà tắc mật ong</h3>
-          <p class="food-desc">Trà tắc thanh mát kết hợp mật ong giải nhiệt cực tốt.</p>
-          <div class="food-footer">
-            <span class="food-price">15.000đ</span>
-            <button class="add-btn">+</button>
+    <!-- MÀN HÌNH 2: Chi tiết món ăn -->
+    <div id="screen-detail" class="screen">
+      <div class="detail-header">
+        <button class="back-btn" onclick="showScreen('screen-menu')">←</button>
+        <img class="detail-img" src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=600&q=80" alt="Bánh xèo">
+      </div>
+      <div class="detail-body">
+        <h2 class="detail-title">Bánh xèo tôm thịt</h2>
+        <div class="detail-price">60.000đ <span style="font-size:12px; color:#747d8c; font-weight:normal;">3 chiếc/1xuất</span></div>
+        <p class="detail-desc">Bánh xèo giòn rụm nhân tôm thịt tươi ngon, ăn kèm rau sống và nước mắm chua ngọt đặc trưng.</p>
+        
+        <div class="option-title">Chọn món ăn kèm</div>
+        <label class="option-item"><input type="checkbox" checked> Rau sống</label>
+        <label class="option-item"><input type="checkbox" checked> Bánh tráng</label>
+
+        <input type="text" class="note-input" placeholder="Ghi chú cho nhà hàng (Cho quán biết thêm yêu cầu của bạn)">
+
+        <div class="detail-footer">
+          <div class="qty-control">
+            <button class="qty-btn">-</button>
+            <span>1</span>
+            <button class="qty-btn">+</button>
           </div>
+          <button class="add-btn-full" style="padding: 10px 0; font-size: 13px;" onclick="showScreen('screen-cart')">Thêm vào giỏ</button>
         </div>
       </div>
     </div>
+
+    <!-- MÀN HÌNH 3: Giỏ hàng -->
+    <div id="screen-cart" class="screen">
+      <div class="cart-header">&lt; Giỏ hàng (Bàn 05)</div>
+      
+      <div class="cart-item">
+        <img class="cart-item-img" src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=400&q=80">
+        <div class="cart-item-info">
+          <div class="cart-item-name">Bánh xèo tôm thịt</div>
+          <div class="cart-item-price">60.000đ</div>
+        </div>
+        <div class="qty-control"><span>1</span></div>
+      </div>
+
+      <div class="cart-item">
+        <img class="cart-item-img" src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80">
+        <div class="cart-item-info">
+          <div class="cart-item-name">Trà tắc</div>
+          <div class="cart-item-price">15.000đ</div>
+        </div>
+        <div class="qty-control"><span>1</span></div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-row"><span>Tạm tính (Subtotal):</span><span>85.000đ</span></div>
+        <div class="summary-row"><span>Giảm giá:</span><span>-0đ</span></div>
+        <div class="summary-row total-row"><span>Tổng thanh toán:</span><span style="color:var(--primary-orange);">85.000đ</span></div>
+        <button class="pay-btn" onclick="showScreen('screen-status')">Xác nhận đặt món • 75.000đ</button>
+      </div>
+    </div>
+
+    <!-- MÀN HÌNH 4: Theo dõi đơn -->
+    <div id="screen-status" class="screen">
+      <div class="cart-header">&lt; Theo dõi đơn hàng (Bàn 05)</div>
+      <div class="status-box">
+        <div style="font-weight:700; font-size:16px; margin-bottom: 6px;">Đã nhận đơn hàng!</div>
+        <div style="font-size:12px; color:#747d8c;">Bếp đang chuẩn bị món ăn cho bạn.</div>
+
+        <div class="status-steps">
+          <div class="step active">
+            <div class="step-icon">✓</div>
+            <span>Đã nhận</span>
+          </div>
+          <div class="step active">
+            <div class="step-icon">🍳</div>
+            <span>Đang nấu</span>
+          </div>
+          <div class="step">
+            <div class="step-icon">🛎️</div>
+            <span>Sẵn sàng</span>
+          </div>
+        </div>
+
+        <div style="text-align:left; border-top:1px solid #f1f2f6; padding-top:16px; margin-top:16px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:8px;">Chi tiết đơn:</div>
+          <div style="font-size:12px; color:#747d8c;">• Bánh xèo tôm thịt (x1)</div>
+          <div style="font-size:12px; color:#747d8c;">• Trà tắc (x1)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="showScreen('screen-menu')">
+        <span style="font-size:16px;">🏠</span>
+        <span>Trang chủ</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('screen-menu')">
+        <span style="font-size:16px;">🔍</span>
+        <span>Tìm kiếm</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('screen-cart')">
+        <span style="font-size:16px;">🛒</span>
+        <span>Giỏ hàng</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('screen-status')">
+        <span style="font-size:16px;">⏱️</span>
+        <span>Theo dõi đơn</span>
+      </div>
+    </nav>
+
   </div>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <a href="#" class="nav-item active">
-      <span>🏠</span>
-      <span>Menu</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span>🛒</span>
-      <span>Giỏ hàng</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span>⏱️</span>
-      <span>Theo dõi đơn</span>
-    </a>
-    <a href="#" class="nav-item">
-      <span>👤</span>
-      <span>Tài khoản</span>
-    </a>
-  </nav>
+  <script>
+    function showScreen(screenId) {
+      // Ẩn tất cả màn hình
+      const screens = document.querySelectorAll('.screen');
+      screens.forEach(s => s.classList.remove('active'));
 
+      // Hiện màn hình được chọn
+      document.getElementById(screenId).classList.add('active');
+
+      // Đổi highlight thanh nav bên dưới
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(n => n.classList.remove('active'));
+
+      if(screenId === 'screen-menu') navItems[0].classList.add('active');
+      if(screenId === 'screen-cart') navItems[2].classList.add('active');
+      if(screenId === 'screen-status') navItems[3].classList.add('active');
+      
+      window.scrollTo(0, 0);
+    }
+  </script>
 </body>
 </html>
