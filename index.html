@@ -1,1 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Khách Hàng - Client App</title>
+  <style>
+    :root {
+      --primary: #ff4757;
+      --bg-color: #f8f9fa;
+      --text-main: #2f3542;
+      --text-sub: #747d8c;
+      --card-bg: #ffffff;
+      --border-color: #e3e6ea;
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-bottom: 75px;
+    }
+
+    /* Top Navigation */
+    header {
+      background: var(--card-bg);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .table-info {
+      font-size: 13px;
+      background: #ffeaa7;
+      color: #d63031;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 10px 14px;
+      background: #f1f2f6;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    /* Horizontal Category Slider */
+    .categories {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .category-chip {
+      padding: 8px 16px;
+      background: #f1f2f6;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text-sub);
+      border: none;
+      cursor: pointer;
+    }
+
+    .category-chip.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Food Grid (Mobile 1 column -> Tablet 2 -> Desktop 4) */
+    .menu-container {
+      padding: 16px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .food-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .food-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* Food Card Component */
+    .food-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .food-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .food-info {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .food-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .food-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .food-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .food-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .add-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: #a4b0be;
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="header-top">
+      <h1 class="header-title">Nhà Hàng Việt</h1>
+      <span class="table-info">Bàn 05</span>
+    </div>
+    <input type="text" class="search-box" placeholder="Tìm kiếm món ăn, đồ uống...">
+  </header>
+
+  <!-- Categories -->
+  <div class="categories">
+    <button class="category-chip active">Tất cả</button>
+    <button class="category-chip">Bánh xèo / Món cuốn</button>
+    <button class="category-chip">Món chính</button>
+    <button class="category-chip">Trà tắc / Đồ uống</button>
+    <button class="category-chip">Tráng miệng</button>
+  </div>
+
+  <!-- Menu Grid -->
+  <div class="menu-container">
+    <h2 class="section-title">Món nổi bật</h2>
+    
+    <div class="food-grid">
+      <!-- Item 1 (Bánh xèo) -->
+      <div class="food-card">
+        <img class="food-img" src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500" alt="Bánh xèo">
+        <div class="food-info">
+          <h3 class="food-name">Bánh xèo tôm thịt</h3>
+          <p class="food-desc">Bánh xèo giòn rụm nhân tôm thịt tươi ngon, ăn kèm rau sống và nước mắm chua ngọt.</p>
+          <div class="food-footer">
+            <span class="food-price">60.000đ</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 (Trà tắc) -->
+      <div class="food-card">
+        <img class="food-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="Trà tắc">
+        <div class="food-info">
+          <h3 class="food-name">Trà tắc mật ong</h3>
+          <p class="food-desc">Trà tắc thanh mát kết hợp mật ong giải nhiệt cực tốt.</p>
+          <div class="food-footer">
+            <span class="food-price">15.000đ</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active">
+      <span>🏠</span>
+      <span>Menu</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>🛒</span>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>⏱️</span>
+      <span>Theo dõi đơn</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>👤</span>
+      <span>Tài khoản</span>
+    </a>
+  </nav>
+
+</body>
+</html>
